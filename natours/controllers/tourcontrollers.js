@@ -4,6 +4,8 @@ const { query } = require('express')
 const AppError = require('../utils/appError')
 const Tour = require('./..//models/tourModel')
 const APIFEATURES=require("./../utils/apiFeaturs")
+const factory=require("./handleFactory")
+
 
 
 
@@ -17,7 +19,7 @@ exports.getTour=async (req,res,next)=>{
        try
          {
           
-          const tour=await Tour.findById(req.params.id)
+          const tour=await Tour.findById(req.params.id).populate("reviews")
           
           if(!tour)
           {
@@ -86,76 +88,11 @@ exports.getAlltours=async (req,res,next)=>{
 }
 
     
-exports.createNewtour=async (req,res,next)=>{
-
-    try{
-        const newTour=await Tour.create(req.body)
-
-    res.status(200).json({
-        status:"successfull",
-        data:newTour
-    })}
-
-    catch(err)
-    {
-        next(err)
-    }
-
-
-    }
-
-exports.updateTour=async (req,res,next)=>{
-  try{
-    const tour= await Tour.findByIdAndUpdate(req.params.id,req.body,{
-        new:true,
-        runValidators:true
-    })
-
-    if(!tour)
-          {
-           return  next(new AppError("No Tour was find by that id",404))
-          }
-
-    res.status(200).json({
-        status:"success",
-        data:{
-            tour
-        }
-    })
-   }
-   catch(err)
-   {
-    next(err)
-   }
+exports.createNewtour=factory.createOne(Tour)
+exports.updateTour=factory.updateOne(Tour)
+exports.deleteTour=factory.deleteOne(Tour)
     
 
-}
-    
-    
-
-
-    
-exports.deleteTour=async(req,res,next)=>
-{
-    try{
-        const tour=await Tour.findByIdAndDelete(req.params.id)
-
-        if(!tour)
-          {
-           return  next(new AppError("No Tour was find by that id",404))
-          } 
-
-        res.status(200).json({
-            status:"success",
-            message:"TOUR HAS BEEN DELETED SUCCESSFULLY"
-
-        })
-    }
-    catch(err)
-    {
-        next(err)
-    }
-}
 
 exports.getTourStats=async (req,res,next) =>
     {

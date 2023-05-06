@@ -130,7 +130,7 @@ exports.protect=async(req,res,next)=>
  401))
   }
  
-  req.user=currentUser
+req.user=currentUser
 
 
 
@@ -271,7 +271,7 @@ exports.updatePassword=async (req,res,next)=>
  {
 
  //1)Get user from collection 
-   const user=await User.findById(req.user.id).select("+password")
+  const user=await User.findById(req.user.id).select("+password")
 
  //2)Check if the POSTed current password is correct
 

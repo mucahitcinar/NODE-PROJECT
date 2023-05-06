@@ -13,15 +13,17 @@ router.patch("/updatePassword",authController.protect,authController.updatePassw
 router.post("/forgetPassword",authController.forgotPassword)
 router.patch("/resetPassword/:token",authController.resetPassword) 
 
+router.patch("/updateMe",authController.protect,userControllers.updateMe)
+
+router.delete("/deleteMe",authController.protect,userControllers.deleteMe)
+
 router 
 .route("/")
-.get(userControllers.getUsers)
+.get(userControllers.getAllUsers)
 .post(userControllers.createNewUser)
 
 router
  .route("/:id")
- .patch(userControllers.updateUsers)
- .delete(userControllers.deleteUser)
  .get(userControllers.getOneUser)
 
 

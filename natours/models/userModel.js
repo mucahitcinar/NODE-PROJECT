@@ -23,7 +23,8 @@ const userSchema=new mongoose.Schema(
         role:
         {
         type:String,
-        enum:["user","guide","lead-guide","admin"]
+        enum:["user","guide","lead-guide","admin"],
+        default:"user"
         },
         password:
         {
@@ -53,6 +54,12 @@ const userSchema=new mongoose.Schema(
          {type:String},
          passwordResetExpires:
          {type:Date},
+         active:
+         {
+          type:Boolean,
+          select:false,
+          default:true
+         }
 
 
 
@@ -70,6 +77,8 @@ this.password=await bcrypt.hash(this.password,12)
 this.passwordConfirm=undefined
 
 })
+
+
 
 userSchema.pre("save",function(next)
 {
@@ -98,7 +107,7 @@ userSchema.methods.changedPasswordAfter= function(JWTTimestamp)
       return JWTTimestamp<changedPasswordTime
     }
 
-// False measn no password change
+// False means no password change
     return false
 }
 
@@ -118,6 +127,17 @@ userSchema.methods.createPasswordResetToken=function()
 
   next()
 }
+
+
+userSchema.pre(/^find/,function(next)
+{
+
+  //this points to the current query
+  this.find({active: {$ne:false}})
+  next()
+})
+
+
 
 const User=new mongoose.model("User",userSchema)
 

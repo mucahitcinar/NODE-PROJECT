@@ -1,9 +1,15 @@
 const express=require("express")
 const tourControllers=require("./../controllers/tourcontrollers")
 const authController=require("./..//controllers/authControllers")
+const reviewRouter=require("./../routes/reviewRoutes")
+
 
 
 const router=express.Router()
+
+
+router.use("/:tourId/Reviews",reviewRouter)
+
 router
      .route("/monthly-plan/:year")
      .get(tourControllers.getMonthlyPlan)
@@ -26,7 +32,7 @@ router
 router
     .route("/:id")
     .patch(tourControllers.updateTour)
-    .get(tourControllers.getTour)
+    .get(authController.protect,tourControllers.getTour)
     .delete(authController.protect,authController.restrictTo("admin","lead-guide"),tourControllers.deleteTour)
 
 
