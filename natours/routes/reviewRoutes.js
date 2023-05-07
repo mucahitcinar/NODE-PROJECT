@@ -13,12 +13,13 @@ router
       .restrictTo("user"),
       reviewControllers.createReview)
       .get(reviewControllers.getAllReviews)
-      .patch()
+    
 
 
 router
       .route("/:id")
       .delete(reviewControllers.deleteReview)
       .patch(reviewControllers.updateReview)
+      .get(reviewControllers.getReview)
 
 module.exports=router

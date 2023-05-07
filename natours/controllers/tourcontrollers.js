@@ -15,41 +15,6 @@ const factory=require("./handleFactory")
 
 
 
-exports.getTour=async (req,res,next)=>{
-       try
-         {
-          
-          const tour=await Tour.findById(req.params.id).populate("reviews")
-          
-          if(!tour)
-          {
-           return  next(new AppError("No Tour was find by that id",404))
-          }
-
-          res.status(200).json
-          ({
-              status:"success",
-              data:
-              {
-                tour
-              }
-          })
-
-          res.status(200)
-         }
-         catch(err)
-         {
-            next(err)
-         }
-    
-    
-    
-    
-
-       
-
-
-    }
 
 exports.aliasing=(req,res,next)=>
 {
@@ -59,35 +24,8 @@ exports.aliasing=(req,res,next)=>
    next()
 }
 
-exports.getAlltours=async (req,res,next)=>{
-
-    
-    try
-    {   
-    
-  
-     const features=new APIFEATURES(Tour.find(),req.query).filter().sort().limit().paginate()
-
-     const tours=await features.query
-
-        res.status(200).json(
-            {
-                status:"success",
-                results:tours.length,
-                data:
-                {
-                    tours
-                }
-            }
-        )
-    }
-    catch(err)
-    {
-        next(err)
-    }
-}
-
-    
+exports.getAlltours=factory.getAll(Tour)
+exports.getTour=factory.getOne(Tour)
 exports.createNewtour=factory.createOne(Tour)
 exports.updateTour=factory.updateOne(Tour)
 exports.deleteTour=factory.deleteOne(Tour)

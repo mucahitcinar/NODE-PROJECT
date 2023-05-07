@@ -1,6 +1,7 @@
 const fs=require("fs")
 const AppError=require("./../utils/appError")
 const User=require("../models/userModel")
+const factory=require("./handleFactory")
 
 const filterObj=(obj,...allowedFields)=>
 {
@@ -15,55 +16,9 @@ const filterObj=(obj,...allowedFields)=>
   return newObj
 }
 
-
-
-
-
-exports.getAllUsers=async (req,res,next)=>
-{
-try
-{
-    let users=await User.find()
-    res.status(200).json({
-           status:"successssss",
-           data:{
-               users
-           }
-       })
-   }
-catch(err)
-{
-    next(err)
-}
-}
-
-
-exports.createNewUser=(req,res)=>
-{
-    res.status(500).json({
-        message:"THIS MODULE IS NOT WORKING YET",
-        status:"success"
-    })
-}
-
-exports.deleteMe=async (req,res)=>
-{
-try
-{
-    await User.findByIdAndUpdate(req.user.id,{active:false})
-    res.status(200).json({
-        
-        status:"success",
-        data:null
-    })
-}
-catch(err)
-{
-    next(err)
-}
-    
-}
-
+exports.getAllUsers=factory.getAll(User)
+exports.deleteUser=factory.deleteOne(User)
+exports.getOneUser=factory.getOne(User)
 
 
 exports.updateMe=async(req,res,next)=>{
@@ -102,10 +57,5 @@ catch(err)
   
 }
 
-exports.getOneUser=(req,res)=>{
-    res.status(500).json({
-        message:"THIS MODULE IS NOT WORKING YET",
-        status:"success"
-    })
-}
+
 
